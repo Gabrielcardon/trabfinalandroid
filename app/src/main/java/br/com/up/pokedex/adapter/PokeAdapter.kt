@@ -5,11 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import br.com.up.pokedex.PokemonDetailsActivity
 import br.com.up.pokedex.R
 import br.com.up.pokedex.model.Pokemon
 import com.squareup.picasso.Picasso
 
-class PokeAdapter(private val pokemons:List<Pokemon>) :
+class PokeAdapter(private val pokemons:List<Pokemon>, private val listener:(pokemon:Pokemon) -> Unit) :
     RecyclerView.Adapter<PokeAdapter.PokeViewHolder>() {
 
     inner class PokeViewHolder(itemView:View):
@@ -40,6 +41,16 @@ class PokeAdapter(private val pokemons:List<Pokemon>) :
         val url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png"
 
         val imageView : ImageView = holder.itemView.findViewById(R.id.poke_image)
+
+        imageView.setOnClickListener{
+
+            listener(pokemon)
+
+
+            //val intent = Intent(,PokemonDetailsActivity::class.java)
+
+            //startActivity(intent)
+        }
 
         Picasso.get().load(url).into(imageView)
 

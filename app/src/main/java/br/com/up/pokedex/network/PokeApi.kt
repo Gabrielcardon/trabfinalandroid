@@ -2,6 +2,7 @@ package br.com.up.pokedex.network
 
 import br.com.up.pokedex.model.PokeResponse
 import br.com.up.pokedex.model.Pokemon
+import br.com.up.pokedex.model.PokemonDetalhe
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,7 +15,7 @@ class PokeApi {
     private var pokeService: PokeApiService? = null
 
 
-    init{
+    init {
 
         retrofit = Retrofit.Builder()
             .baseUrl("https://pokeapi.co/api/v2/")
@@ -26,18 +27,55 @@ class PokeApi {
     }
 
 
-    fun getPokemons(listener:(List<Pokemon>?) -> Unit){
+    fun getPokemons(listener: (List<Pokemon>?) -> Unit) {
         val call = pokeService?.getPokemons()
-        call?.enqueue(object : Callback<PokeResponse>{
+        call?.enqueue(object : Callback<PokeResponse> {
             override fun onResponse(
                 call: Call<PokeResponse>,
                 response: Response<PokeResponse>) {
                 listener(response.body()?.pokemons)
             }
+
             override fun onFailure(call: Call<PokeResponse>,
                                    t: Throwable) {
                 listener(null)
             }
         })
     }
+
+    fun getPokemonByName(name:String,
+                         listener: (PokemonDetalhe?) -> Unit){
+
+        val call = pokeService?.getPokemonByName(name)
+
+        call?.enqueue(object : Callback<PokemonDetalhe>{
+            override fun onResponse(call: Call<PokemonDetalhe>,
+                                    response: Response<PokemonDetalhe>) {
+                listener(response.body())
+            }
+
+            override fun onFailure(call: Call<PokemonDetalhe>,
+                                   t: Throwable) {
+                listener(null)
+            }
+        })
+    }
+
+    fun getPokemonById(id:String,
+                       listener: (Pokemon?) -> Unit){
+        val call = pokeService?.getPokemonById(id)
+
+        call?.enqueue(object : Callback<Pokemon>{
+            override fun onResponse(call: Call<Pokemon>, response: Response<Pokemon>) {
+                listener(response.body())
+            }
+
+            override fun onFailure(call: Call<Pokemon>, t: Throwable) {
+                listener(null)
+            }
+
+        })
+    }
+
+
 }
